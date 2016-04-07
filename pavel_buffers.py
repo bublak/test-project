@@ -4,7 +4,7 @@ def getBuffers(vimBuffers, vim):
     # todo svn status = vymyslet jak - asynchonne nacist?
 
     # cislovani bufferu oproti pismenum
-    cislovani = 1
+    bufferLetterNumber = 1
     letters = {}
     letters = _getLetters()
 
@@ -51,8 +51,8 @@ def getBuffers(vimBuffers, vim):
         bufferData['number']        = bufNumber
         bufferData['path']          = bufName
         bufferData['pathParts']     = _parsePath(bufferData['path'])
-        bufferData['letter']        = letters.get(cislovani)
-        cislovani = cislovani + 1
+        bufferData['letter']        = letters.get(bufferLetterNumber)
+        bufferLetterNumber          = bufferLetterNumber + 1
 
         buffers[vimBuffers[i].number] = bufferData
     return buffers;
