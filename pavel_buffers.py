@@ -8,7 +8,12 @@ def getBuffers(vimBuffers, vim):
     letters = {}
     letters = _getLetters()
 
-    for i in range(1, len(vimBuffers)):
+
+    buffersCount = len(vimBuffers) + 2 # todo -> not all buffers are included, if only len is check
+
+    _log (buffersCount.__str__() + ' pocet bufferu')
+
+    for i in range(1, buffersCount):
         bufferData = {}
 
         # todo -> check that vimBuffers[i] realy exists
@@ -26,11 +31,11 @@ def getBuffers(vimBuffers, vim):
         canBeModifiable = vim.eval('vim_buf_modif')
 
         if (canBeListed.__str__() == '0' ):
-            #_log ('neni listed');
+            _log (bufNumber.__str__() + ' neni listed');
             continue
 
         if (canBeModifiable.__str__() == '0'):
-            #_log ('neni modifiable');
+            _log (bufNumber.__str__() + ' neni modifiable');
             continue
 
         bufName = vimBuffers[i].name
@@ -91,7 +96,6 @@ def changeBuffer(vim, newBufferId, buffersData):
 
 def printBuffersSortByFilename(buffersData):
     sortKeys = sorted(buffersData, key=lambda x: buffersData[x].get('pathParts').get('filename'))
-    print sortKeys
     printBuffers(buffersData, sortKeys)
 
 def printBuffersSortByDir(buffersData):
@@ -121,7 +125,6 @@ def printBuffers(buffersData, sortKeys):
     print  ('----- buffer list -------')
     print "\n"
 
-    print sortKeys
     if (len(sortKeys) == 0):
         sortKeys = buffersData.keys()
 
@@ -284,3 +287,4 @@ def _getLetters():
 
 def _log(a):
     print a
+
