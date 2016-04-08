@@ -1,3 +1,8 @@
+
+FILTER_RELEVANCE_INIT      = 0
+FILTER_FILTENAME_RELEVANCE = 2
+FILTER_FILEPATH_RELEVANCE  = 1
+
 def getBuffers(vimBuffers, vim):
     buffers = {}
 
@@ -31,11 +36,11 @@ def getBuffers(vimBuffers, vim):
         canBeModifiable = vim.eval('vim_buf_modif')
 
         if (canBeListed.__str__() == '0' ):
-            _log (bufNumber.__str__() + ' neni listed');
+            #_log (bufNumber.__str__() + ' neni listed');
             continue
 
         if (canBeModifiable.__str__() == '0'):
-            _log (bufNumber.__str__() + ' neni modifiable');
+            #_log (bufNumber.__str__() + ' neni modifiable');
             continue
 
         bufName = vimBuffers[i].name
@@ -109,15 +114,21 @@ def printBuffersSortByBufferNumber(buffersData):
 def printBuffersFilteredByString(vim, newBuffer, buffersData):
     newBuffer = newBuffer.lower()
 
-    sortKeys = []
+    sortKeys = {}
 
     for bufferNum in buffersData:
+        relevanceNum = FILTER_RELEVANCE_INIT
         if buffersData[bufferNum].get('pathParts').get('fullpath').lower().find(newBuffer) != -1:
-            sortKeys.append(bufferNum)
+            #todo - fullpath contains filename - which increase relevance - use without filename
+            relevanceNum = relevanceNum + FILTER_FILEPATH_RELEVANCE
         if buffersData[bufferNum].get('pathParts').get('filename').lower().find(newBuffer) != -1:
-            sortKeys.append(bufferNum)
+            relevanceNum = relevanceNum + FILTER_FILTENAME_RELEVANCE
 
-    sortKeys = list(set(sortKeys)) # get unique values
+        if relevanceNum > 0:
+            sortKeys[bufferNum] = relevanceNum
+
+    sortKeys = sorted(sortKeys, key=sortKeys.get, reverse=True)
+
     printBuffers(buffersData, sortKeys)
 
 def printBuffers(buffersData, sortKeys):
@@ -142,6 +153,7 @@ def printBuffers(buffersData, sortKeys):
         line += _getFileNameAdjusted(buffersData[bufferNum].get('pathParts').get('filename'), maxLenghts['fileLength'])
         line += space
 
+        # TODO - if is used tab -> and closed, there remains empty buffer, which does not have 'path'
         pathData = buffersData[bufferNum].get('pathParts').get('path')
 
         pathData.reverse()
