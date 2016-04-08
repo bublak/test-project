@@ -6,17 +6,9 @@ python sys.path.append(vim.eval('expand("<sfile>:h")'))
 function! PavelBuffers()
 python << endOfPython
 
-from pavel_buffers import getBuffers
-from pavel_buffers import prepareBuffersForGUI
-from pavel_buffers import printBuffers
-from pavel_buffers import printBuffersSortByFilename
-from pavel_buffers import printBuffersSortByDir
-from pavel_buffers import printBuffersSortByBufferNumber
-from pavel_buffers import printBuffersFilteredByString
-from pavel_buffers import changeBuffer
-from pavel_buffers import changeBufferCmdDialog
+from pavel_buffers import *
 
-# TODO then vim.buffers is not updated - for examply create new file
+# TODO  vim.buffers is not updated - for examply create new file
 buffersData = getBuffers(vim.buffers, vim)
 printBuffers(buffersData, [])
 
@@ -28,10 +20,11 @@ while (x):
     # jak na to -> cykluju pres buffer data, vyberu pozadovanou vec ( v pripade  e a o -> to je nekde jinde ulozeny), 
     #  a pak seradim nove vybrany veci (mam jejich id v buffersdata), a znovu projizdim buffersdata podle toho serazenyho id
 
+    # TODO - add sorting by  lenght of filename
+
     # TODO -> kdyz zadam F -> tak to pri psani filtruje/vyhledava (nebo namapovat na neco jinyho nez PBuf
     # TODO -> barvy pri vyhledavani??
     if (newBuffer.__str__() == 'sortf'):
-        print 'radim podle file'
         printBuffersSortByFilename(buffersData)
     elif (newBuffer.__str__() == 'sortd' or newBuffer.__str__() == 'sortp'):
         printBuffersSortByDir(buffersData)
