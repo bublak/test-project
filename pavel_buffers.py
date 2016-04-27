@@ -1,7 +1,7 @@
 
-FILTER_RELEVANCE_INIT      = 0
-FILTER_FILTENAME_RELEVANCE = 2
-FILTER_FILEPATH_RELEVANCE  = 1
+FILTER_RELEVANCE_INIT     = 0
+FILTER_FILENAME_RELEVANCE = 2
+FILTER_FILEPATH_RELEVANCE = 1
 
 def getBuffers(vimBuffers, vim):
     buffers = {}
@@ -118,15 +118,23 @@ def printBuffersFilteredByString(vim, newBuffer, buffersData):
 
     for bufferNum in buffersData:
         relevanceNum = FILTER_RELEVANCE_INIT
-        if buffersData[bufferNum].get('pathParts').get('fullpath').lower().find(newBuffer) != -1:
+
+        fullpathString = buffersData[bufferNum].get('pathParts').get('fullpath')
+        filenameString = buffersData[bufferNum].get('pathParts').get('filename')
+
+        if filenameString.find(newBuffer) != -1:
+            relevanceNum = relevanceNum + 2 * FILTER_FILENAME_RELEVANCE
+        elif filenameString.lower().find(newBuffer) != -1:
+            relevanceNum = relevanceNum + FILTER_FILENAME_RELEVANCE
+
+        if fullpathString.lower().find(newBuffer) != -1:
             #todo - fullpath contains filename - which increase relevance - use without filename
             relevanceNum = relevanceNum + FILTER_FILEPATH_RELEVANCE
-        if buffersData[bufferNum].get('pathParts').get('filename').lower().find(newBuffer) != -1:
-            relevanceNum = relevanceNum + FILTER_FILTENAME_RELEVANCE
 
         if relevanceNum > 0:
             sortKeys[bufferNum] = relevanceNum
 
+    # sort by relevance value
     sortKeys = sorted(sortKeys, key=sortKeys.get, reverse=True)
 
     printBuffers(buffersData, sortKeys)
