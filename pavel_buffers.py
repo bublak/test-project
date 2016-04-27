@@ -1,3 +1,6 @@
+FOLDER_SEPARATOR = '/'
+SPACE_1 = ' '
+SPACE_3 = '   '
 
 FILTER_RELEVANCE_INIT     = 0
 FILTER_FILENAME_RELEVANCE = 2
@@ -53,11 +56,11 @@ def getBuffers(vimBuffers, vim):
         if (bufName.rfind('NERD_tree_') > -1):
             continue
 
-        bufferData['number']        = bufNumber
-        bufferData['path']          = bufName
-        bufferData['pathParts']     = _parsePath(bufferData['path'])
-        bufferData['letter']        = letters.get(bufferLetterNumber)
-        bufferLetterNumber          = bufferLetterNumber + 1
+        bufferData['number']    = bufNumber
+        bufferData['path']      = bufName
+        bufferData['pathParts'] = _parsePath(bufferData['path'])
+        bufferData['letter']    = letters.get(bufferLetterNumber)
+        bufferLetterNumber      = bufferLetterNumber + 1
 
         buffers[vimBuffers[i].number] = bufferData
     return buffers;
@@ -149,9 +152,7 @@ def printBuffers(buffersData, sortKeys):
 
     maxLenghts = _countWordLengths(buffersData);
 
-    space      = '   '
-    letter     = 'a'
-    separator  = '/' #TODO - use function or constant
+    space = SPACE_3
     
     for bufferNum in sortKeys:
         line = ''
@@ -167,7 +168,7 @@ def printBuffers(buffersData, sortKeys):
         pathData.reverse()
 
         for pp in pathData:
-            line += pp + separator
+            line += pp + FOLDER_SEPARATOR
 
         line += space
         line += buffersData[bufferNum].get('number').__str__()
@@ -177,7 +178,6 @@ def printBuffers(buffersData, sortKeys):
 
 def _getFileNameAdjusted(filename, maxLenght):
     fileString = '';
-    space      = ' '
 
     fileL = len(filename)
 
@@ -186,7 +186,7 @@ def _getFileNameAdjusted(filename, maxLenght):
     else:
         spacesCount = (maxLenght - fileL)
 
-    return filename + space * spacesCount
+    return filename + SPACE_1 * spacesCount
 
 def _countWordLengths(buffersData):
     fileLength = 0
@@ -209,16 +209,15 @@ def _countWordLengths(buffersData):
 
     return {'fileLength': fileLength, 'pathLength': pathLength}
    
-#assume, that the last part of path is filename
+#for parsing path, there is assumption, that the last part of path is filename
 def _parsePath(path):
     pathParts = {}
-    separator = '/' #TODO - use function
 
     pathParts['fullpath'] = path
 
-    pathParts['separator']     = separator 
+    pathParts['separator'] = FOLDER_SEPARATOR
 
-    path = path.split(separator)
+    path = path.split(FOLDER_SEPARATOR)
 
     if len(path) > 0:
         pathParts['filename'] = path.pop(len(path)-1)
