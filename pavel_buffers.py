@@ -99,7 +99,6 @@ def changeBuffer(vim, newBufferId, buffersData):
             vim.command('b ' + newBufferId)
             return 0
 
-    print "\n+++ Nothing found, try again" + "\n" 
     return 1
 
 def printBuffersSortByFilename(buffersData):
@@ -114,7 +113,7 @@ def printBuffersSortByBufferNumber(buffersData):
     sortKeys = sorted(buffersData, key=lambda x: x)
     printBuffers(buffersData, sortKeys)
 
-def printBuffersFilteredByString(vim, newBuffer, buffersData):
+def printBuffersFilteredByString(vim, newBuffer, buffersData, isOneMatchChange=False):
     newBuffer = newBuffer.lower()
 
     sortKeys = {}
@@ -124,6 +123,13 @@ def printBuffersFilteredByString(vim, newBuffer, buffersData):
 
         fullpathString = buffersData[bufferNum].get('pathParts').get('fullpath')
         filenameString = buffersData[bufferNum].get('pathParts').get('filename')
+
+        # todo: vymyslet cislovani pro shodu:
+        # exact filename + 3
+        # start of name + 2 shorter file first
+        # start of name +1 longer file last
+        # match anyhwhere shorter +2
+        # match anywhere longer +1
 
         if filenameString.find(newBuffer) != -1:
             relevanceNum = relevanceNum + 2 * FILTER_FILENAME_RELEVANCE
@@ -137,10 +143,18 @@ def printBuffersFilteredByString(vim, newBuffer, buffersData):
         if relevanceNum > 0:
             sortKeys[bufferNum] = relevanceNum
 
-    # sort by relevance value
-    sortKeys = sorted(sortKeys, key=sortKeys.get, reverse=True)
+    result = 1;
 
-    printBuffers(buffersData, sortKeys)
+    print sortKeys
+    if isOneMatchChange == True & sortKeys.__len__() == 1:
+        result = changeBuffer(vim, bufferNum.__str__(), buffersData)
+    else:
+        # sort by relevance value
+        sortKeys = sorted(sortKeys, key=sortKeys.get, reverse=True)
+
+        printBuffers(buffersData, sortKeys)
+
+    return result
 
 def printBuffers(buffersData, sortKeys):
     print "\n"

@@ -8,11 +8,15 @@ python << endOfPython
 
 from pavel_buffers import *
 
-# TODO  vim.buffers is not updated - for examply create new file
+# TODO  vim.buffers is not updated - for example if the new file is created, it is not loaded in vim.buffers
 buffersData = getBuffers(vim.buffers, vim)
 printBuffers(buffersData, [])
 
+# allow open one found file imediately, after filtering by string result contains only one file
+allowOneMatchChange = True
+
 x = True
+
 while (x):
     newBuffer = changeBufferCmdDialog(vim)
 
@@ -37,9 +41,14 @@ while (x):
         if (result == 0):
             x = False
         else:
-            # nic nenaslo - zkus hledat zadany retezec
-            printBuffersFilteredByString(vim, newBuffer, buffersData)
-        
+            # Nothing was found, try to search the input string in buffers data
+            result = printBuffersFilteredByString(vim, newBuffer, buffersData, allowOneMatchChange)
+
+            #todo - tfuj - nejak hezcejc
+            if (result == 0):
+                x = False
+            else:
+                print "\n+++ Nothing found, try again" + "\n" 
 
 
 #help(vim.eval)
