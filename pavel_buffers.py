@@ -145,7 +145,6 @@ def printBuffersFilteredByString(vim, newBuffer, buffersData, isOneMatchChange=F
 
     result = 1;
 
-    print sortKeys
     if isOneMatchChange == True & sortKeys.__len__() == 1:
         result = changeBuffer(vim, bufferNum.__str__(), buffersData)
     else:
