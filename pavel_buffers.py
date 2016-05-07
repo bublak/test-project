@@ -97,9 +97,13 @@ def changeBuffer(vim, newBufferId, buffersData):
         if (newBufferId):
             #_log('prechazim na cislo')
 
-            vim.command('b ' + newBufferId)
-            return 0
+            try:
+                vim.command('b ' + newBufferId)
+                return 0
 
+            except:
+                #invalid buffer name, do nothing (for exapmle if input string is:  :b)
+                return 1
 
 
 
