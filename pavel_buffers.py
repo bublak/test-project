@@ -153,7 +153,7 @@ def printBuffersFilteredByString(vim, newBuffer, buffersData, isOneMatchChange=F
 
     result = 1;
 
-    if isOneMatchChange == True & sortKeys.__len__() == 1:
+    if isOneMatchChange == True and sortKeys.__len__() == 1:
         result = changeBuffer(vim, sortKeys.keys()[0].__str__(), buffersData)
     else:
         # sort by relevance value
