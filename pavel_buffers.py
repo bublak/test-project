@@ -96,8 +96,12 @@ def changeBuffer(vim, newBufferId, buffersData):
     else:
         if (newBufferId):
             #_log('prechazim na cislo')
+
             vim.command('b ' + newBufferId)
             return 0
+
+
+
 
     return 1
 
@@ -176,6 +180,7 @@ def printBuffers(buffersData, sortKeys):
         line += space
 
         # TODO - if is used tab -> and closed, there remains empty buffer, which does not have 'path'
+        # or if the TlistOpen and close
         pathData = buffersData[bufferNum].get('pathParts').get('path')
 
         pathData.reverse()
