@@ -9,7 +9,7 @@ FILTER_FILEPATH_RELEVANCE = 1
 def getBuffers(vimBuffers, vim):
     buffers = {}
 
-    # todo svn status = vymyslet jak - asynchonne nacist?
+    # todo svn status = vymyslet jak - asynchronne nacist?
 
     # cislovani bufferu oproti pismenum
     bufferLetterNumber = 1
@@ -185,10 +185,11 @@ def printBuffers(buffersData, sortKeys):
 
         # TODO - if is used tab -> and closed, there remains empty buffer, which does not have 'path'
         # or if the TlistOpen and close
-        pathData = buffersData[bufferNum].get('pathParts').get('path')
-
+        pathData = list(buffersData[bufferNum].get('pathParts').get('path')) #copy the original list
+        
         pathData.reverse()
 
+        print(buffersData[bufferNum].get('pathParts').get('path'));
         for pp in pathData:
             line += pp + FOLDER_SEPARATOR
 
